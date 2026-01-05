@@ -10,3 +10,12 @@ export const userSchema = z.object({
 		.string("Password is required")
 		.min(8, "Password must be at least 8 characters long"),
 });
+
+export const sendOtpSchema = z.object({
+	email: z.string("Email is required").email("Invalid email"),
+});
+
+export const loginSchema = z.object({
+	email: z.string("Email is required").email("Invalid email"),
+	password: z.string("Password is required"),
+});
