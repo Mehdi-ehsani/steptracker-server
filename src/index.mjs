@@ -7,6 +7,7 @@ import { logger } from "../middlewares/index.mjs";
 const app = express();
 const PORT = process.env.PORT;
 
+app.use(express.json());
 app.use(logger);
 
 app.get("/", (req, res) => {

@@ -1,9 +1,12 @@
 import { Router } from "express";
+import { validate } from "../middlewares/index.mjs";
+import { userSchema } from "../validation/index.mjs";
 
 const router = Router();
 
-router.post('/register', (req, res) => {
-    res.send("Hello Register")
+router.post('/register', validate(userSchema), (req, res) => {
+    const {name , email , password} = req.body;
+    res.status(200).send({name , email , password})
 })
 
 router.post('/verify-email', (req, res) => {
