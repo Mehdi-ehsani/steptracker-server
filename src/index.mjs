@@ -1,14 +1,19 @@
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
+import { authRouter } from "../routes/index.mjs";
+import { logger } from "../middlewares/index.mjs";
 
 const app = express();
-
 const PORT = process.env.PORT;
 
+app.use(logger);
+
 app.get("/", (req, res) => {
-    res.status(200).send("Hello World");
-})
+	res.status(200).send("Hello World");
+});
+
+app.use("/api/auth", authRouter);
 
 mongoose
 	.connect(process.env.DB_URI)
