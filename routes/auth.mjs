@@ -13,6 +13,38 @@ import { sendOtp, createOtp } from "../services/index.mjs";
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: ثبت نام کاربر جدید
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterRequest'
+ *     responses:
+ *       201:
+ *         description: کاربر با موفقیت ثبت نام شد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RegisterResponse'
+ *       400:
+ *         description: خطا در ثبت نام (ایمیل تکراری)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: خطای سرور
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.post("/register", validate(userSchema), async (req, res) => {
 	try {
 		const { name, email, password } = req.body;
@@ -52,6 +84,38 @@ router.post("/register", validate(userSchema), async (req, res) => {
 	}
 });
 
+/**
+ * @swagger
+ * /api/auth/send-otp:
+ *   post:
+ *     summary: ارسال کد اعتبار سنجی (OTP)
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/SendOtpRequest'
+ *     responses:
+ *       200:
+ *         description: کد اعتبار سنجی با موفقیت ارسال شد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SendOtpResponse'
+ *       400:
+ *         description: خطا در ارسال OTP (کاربر وجود ندارد، قبلاً تایید شده، یا OTP قبلی هنوز معتبر است)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: خطای سرور
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.post("/send-otp", validate(sendOtpSchema), async (req, res) => {
 	try {
 		const { email } = req.body;
@@ -112,6 +176,38 @@ router.post("/send-otp", validate(sendOtpSchema), async (req, res) => {
 	}
 });
 
+/**
+ * @swagger
+ * /api/auth/verify-otp:
+ *   post:
+ *     summary: تایید کد اعتبار سنجی (OTP)
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/VerifyOtpRequest'
+ *     responses:
+ *       200:
+ *         description: کاربر با موفقیت تایید شد و توکن‌های دسترسی برگردانده شد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/VerifyOtpResponse'
+ *       400:
+ *         description: خطا در تایید OTP (کاربر وجود ندارد، قبلاً تایید شده، OTP منقضی شده یا نامعتبر)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: خطای سرور
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.post("/verify-otp", async (req, res) => {
 	try {
 		const { email, otp } = req.body;
@@ -196,6 +292,38 @@ router.post("/verify-otp", async (req, res) => {
 	}
 });
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: ورود کاربر
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginRequest'
+ *     responses:
+ *       200:
+ *         description: کاربر با موفقیت وارد شد و توکن‌های دسترسی برگردانده شد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginResponse'
+ *       400:
+ *         description: خطا در ورود (کاربر وجود ندارد، تایید نشده، یا رمز عبور نامعتبر)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: خطای سرور
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.post("/login", validate(loginSchema), async (req, res) => {
 	try {
 		const { email, password } = req.body;
