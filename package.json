@@ -1,0 +1,23 @@
+{
+	"name": "steptracker-server",
+	"version": "1.0.0",
+	"main": "./src/index.mjs",
+	"type": "module",
+	"scripts": {
+		"start": "node ./src/index.mjs",
+		"start:dev": "nodemon --env-file=.env ./src/index.mjs"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"dotenv": "^17.2.3",
+		"express": "^4.18.2",
+		"mongoose": "^9.1.1",
+		"zod": "^4.3.5"
+	},
+	"devDependencies": {
+		"nodemon": "^3.1.11"
+	}
+}
