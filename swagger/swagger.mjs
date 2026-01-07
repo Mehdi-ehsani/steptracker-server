@@ -20,6 +20,10 @@ const options = {
 				name: "Authentication",
 				description: "روت‌های احراز هویت و مدیریت کاربر",
 			},
+			{
+				name: "Profile",
+				description: "روت های پروفایل کاربر",
+			},
 		],
 		servers: [
 			{
@@ -295,7 +299,7 @@ const options = {
 						},
 						message: {
 							type: "string",
-							example: "Access token refreshed successfully",
+							example: " توکن دسترسی گرفته شد",
 						},
 						data: {
 							type: "object",
@@ -309,6 +313,26 @@ const options = {
 									example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
 								},
 							},
+						},
+					},
+				},
+				ProfileResponse: {
+					type: "object",
+					properties: {
+						success: {
+							type: "boolean",
+							example: true,
+						},
+						status: {
+							type: "number",
+							example: 200,
+						},
+						message: {
+							type: "string",
+							example: "پروفایل دریافت شده",
+						},
+						data: {
+							$ref: "#/components/schemas/User",
 						},
 					},
 				},
