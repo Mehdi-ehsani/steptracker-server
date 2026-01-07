@@ -271,6 +271,47 @@ const options = {
 						},
 					},
 				},
+				RefreshTokenRequest: {
+					type: "object",
+					required: ["refreshToken"],
+					properties: {
+						refreshToken: {
+							type: "string",
+							example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+							description: "توکن رفرش برای دریافت توکن دسترسی جدید",
+						},
+					},
+				},
+				RefreshTokenResponse: {
+					type: "object",
+					properties: {
+						success: {
+							type: "boolean",
+							example: true,
+						},
+						status: {
+							type: "number",
+							example: 200,
+						},
+						message: {
+							type: "string",
+							example: "Access token refreshed successfully",
+						},
+						data: {
+							type: "object",
+							properties: {
+								accessToken: {
+									type: "string",
+									example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+								},
+								refreshToken: {
+									type: "string",
+									example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	},
