@@ -392,4 +392,95 @@ router.post("/login", validate(loginSchema), async (req, res) => {
 	}
 });
 
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     summary: تازه‌سازی توکن دسترسی (Refresh Token)
+ *     description: با استفاده از توکن رفرش، یک توکن دسترسی جدید و یک توکن رفرش جدید دریافت می‌کند
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RefreshTokenRequest'
+ *     responses:
+ *       200:
+ *         description: توکن دسترسی با موفقیت تازه‌سازی شد
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RefreshTokenResponse'
+ *       400:
+ *         description: خطا در تازه‌سازی توکن (توکن رفرش نامعتبر یا منقضی شده)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: خطای سرور
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+router.post("/refresh", async (req, res) => {
+	try {
+		const { refreshToken } = req.body;
+		const existingRefreshToken = await refreshTokenModel.findOne({
+			token: refreshToken,
+		});
+
+		if (!existingRefreshToken) {
+			return res.status(400).send({
+				success: false,
+				status: 400,
+				message: "توکن بروزرسانی نامعتبر است",
+			});
+		}
+		if (existingRefreshToken.expiresAt < new Date()) {
+			return res.status(400).send({
+				success: false,
+				status: 400,
+				message: "توکن بروزرسانی منقضی شده است",
+			});
+		}
+		const accessToken = jwt.sign(
+			{ userId: existingRefreshToken.userId },
+			process.env.ACCESS_SECRET,
+			{ expiresIn: "1h" }
+		);
+		const newRefreshToken = jwt.sign(
+			{ userId: existingRefreshToken.userId },
+			process.env.REFRESH_SECRET,
+			{ expiresIn: "7d" }
+		);
+		const refreshTokenExpiresAt = new Date(
+			Date.now() + 7 * 24 * 60 * 60 * 1000
+		);
+		await refreshTokenModel.findOneAndUpdate(
+			{ token: existingRefreshToken.token },
+			{ $set: { token: newRefreshToken, expiresAt: refreshTokenExpiresAt } },
+			{ new: true }
+		);
+		return res.status(200).send({
+			success: true,
+			status: 200,
+			message: "توکن دسترسی با موفقیت بروزرسانی شد",
+			data: {
+				accessToken,
+				refreshToken: newRefreshToken,
+			},
+		});
+	} catch (error) {
+		return res.status(500).send({
+			success: false,
+			status: 500,
+			message: "Internal server error",
+			error: error.message,
+		});
+	}
+});
+
 export { router as authRouter };

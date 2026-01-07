@@ -1,4 +1,10 @@
 import swaggerJsdoc from "swagger-jsdoc";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const rootDir = join(__dirname, "..");
 
 const options = {
 	definition: {
@@ -19,6 +25,10 @@ const options = {
 			{
 				name: "Authentication",
 				description: "روت‌های احراز هویت و مدیریت کاربر",
+			},
+			{
+				name: "Profile",
+				description: "روت های پروفایل کاربر",
 			},
 		],
 		servers: [
@@ -271,10 +281,88 @@ const options = {
 						},
 					},
 				},
+				RefreshTokenRequest: {
+					type: "object",
+					required: ["refreshToken"],
+					properties: {
+						refreshToken: {
+							type: "string",
+							example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+							description: "توکن رفرش برای دریافت توکن دسترسی جدید",
+						},
+					},
+				},
+				RefreshTokenResponse: {
+					type: "object",
+					properties: {
+						success: {
+							type: "boolean",
+							example: true,
+						},
+						status: {
+							type: "number",
+							example: 200,
+						},
+						message: {
+							type: "string",
+							example: " توکن دسترسی گرفته شد",
+						},
+						data: {
+							type: "object",
+							properties: {
+								accessToken: {
+									type: "string",
+									example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+								},
+								refreshToken: {
+									type: "string",
+									example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+								},
+							},
+						},
+					},
+				},
+				ProfileResponse: {
+					type: "object",
+					properties: {
+						success: {
+							type: "boolean",
+							example: true,
+						},
+						status: {
+							type: "number",
+							example: 200,
+						},
+						message: {
+							type: "string",
+							example: "پروفایل دریافت شده",
+						},
+						data: {
+							$ref: "#/components/schemas/User",
+						},
+					},
+				},
+				LogoutResponse: {
+					type: "object",
+					properties: {
+						success: {
+							type: "boolean",
+							example: true,
+						},
+						status: {
+							type: "number",
+							example: 200,
+						},
+						message: {
+							type: "string",
+							example: "کاربر با موفقیت از همه دستگاه‌ها خارج شد",
+						},
+					},
+				},
 			},
 		},
 	},
-	apis: ["./routes/*.mjs", "./src/index.mjs"],
+	apis: [join(rootDir, "routes", "*.mjs"), join(rootDir, "src", "index.mjs")],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
