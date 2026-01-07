@@ -3,7 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "../swagger/swagger.mjs";
-import { authRouter } from "../routes/index.mjs";
+import { authRouter, profileRouter } from "../routes/index.mjs";
 import { logger } from "../middlewares/index.mjs";
 
 const app = express();
@@ -35,6 +35,7 @@ app.get("/", (req, res) => {
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api/auth", authRouter);
+app.use("/api/profile", profileRouter);
 
 mongoose
 	.connect(process.env.DB_URI)
