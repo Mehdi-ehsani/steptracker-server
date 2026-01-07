@@ -1,4 +1,10 @@
 import swaggerJsdoc from "swagger-jsdoc";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const rootDir = join(__dirname, "..");
 
 const options = {
 	definition: {
@@ -336,10 +342,27 @@ const options = {
 						},
 					},
 				},
+				LogoutResponse: {
+					type: "object",
+					properties: {
+						success: {
+							type: "boolean",
+							example: true,
+						},
+						status: {
+							type: "number",
+							example: 200,
+						},
+						message: {
+							type: "string",
+							example: "کاربر با موفقیت از همه دستگاه‌ها خارج شد",
+						},
+					},
+				},
 			},
 		},
 	},
-	apis: ["./routes/*.mjs", "./src/index.mjs"],
+	apis: [join(rootDir, "routes", "*.mjs"), join(rootDir, "src", "index.mjs")],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
